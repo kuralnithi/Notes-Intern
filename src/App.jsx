@@ -118,7 +118,7 @@ console.log("US",username);
       // https://password-reset-ze4r.onrender.com
   
         const regResponce = await fetch(
-          "http://localhost:5000/api/user/register",
+          "https://notes-intern-backend.onrender.com/api/user/register",
           {
             method: "post",
             headers: {
@@ -157,7 +157,7 @@ console.log("US",username);
       }
   
       const loginRes = await fetch(
-        "http://localhost:5000/api/user/login",
+        "https://notes-intern-backend.onrender.com/api/user/login",
         {
           method: "post",
           headers: {
@@ -195,7 +195,7 @@ console.log("US",username);
         }
   
         const forgetFetch = await fetch(
-          "http://localhost:5000/api/resetpassword",
+          "https://notes-intern-backend.onrender.com/api/resetpassword",
           {
             method: "post",
             headers: {
@@ -241,7 +241,7 @@ console.log("US",username);
         console.log("token get from local and updated in setToken()", token);
   
         const responce = await fetch(
-          "http://localhost:5000/api/getuser",
+          "https://notes-intern-backend.onrender.com/api/getuser",
           {
             method: "get",
             headers: {

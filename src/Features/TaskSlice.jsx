@@ -6,7 +6,7 @@ export const addTask = createAsyncThunk("addtask", async (taskData) => {
     console.log("add task thunk", taskData);
 
     const addTaskFetch = await axios
-      .post("http://localhost:5000/api/addtask", { taskData })
+      .post("https://notes-intern-backend.onrender.com/api/addtask", { taskData })
       .then((res) => res.data.data);
 
     return addTaskFetch;
@@ -17,7 +17,7 @@ export const addTask = createAsyncThunk("addtask", async (taskData) => {
 
 export const deleteTask = createAsyncThunk("deletetask", async (taskData) => {
   const deleteTaskFetch = await axios
-    .post("http://localhost:5000/api/deletetask", {  taskData })
+    .post("https://notes-intern-backend.onrender.com/api/deletetask", {  taskData })
     .then((res) => res.data.data);
   console.log("deleteTaskFetch", deleteTaskFetch);
 
@@ -26,7 +26,7 @@ export const deleteTask = createAsyncThunk("deletetask", async (taskData) => {
 
 export const updateTask = createAsyncThunk("updateTask", async (taskData) => {
   const updateTaskFetch = await axios.post(
-    "http://localhost:5000/api/updatetask",
+    "https://notes-intern-backend.onrender.com/api/updatetask",
     { taskData }
   ).then((res) => res.data.data);
   console.log(updateTaskFetch.data);
@@ -35,7 +35,7 @@ export const updateTask = createAsyncThunk("updateTask", async (taskData) => {
 });
 export const getTask = createAsyncThunk("getTask", async (taskData) => {
   const getTaskFetch = await axios
-    .post("http://localhost:5000/api/gettask",{taskData})
+    .post("https://notes-intern-backend.onrender.com/api/gettask",{taskData})
     .then((res) => res.data.data);
 
   console.log("getted task from fetch", getTaskFetch);
