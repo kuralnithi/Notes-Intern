@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTask, deleteTask, getTask, updateTask } from "./Features/TaskSlice";
 import { v4 as uuidv4 } from "uuid";
 import "./TasksPage.css";
 import { faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Link } from "react-router-dom";
 function TasksPage() {
   const [taskText, setTaskText] = useState("");
   const [taskTitle, setTaskTitle] = useState("");
@@ -24,10 +26,11 @@ const  username = useSelector(state=> state.user.username)
 const  userEmail = useSelector(state=> state.user.emailid)
 const  loggedin = useSelector(state=> state.user.login)
 
+const taskref = useRef(null)
   const handleTaskTextChange = (e) => {
     setTaskText(e.target.value);
   };
-
+  
   const handleTaskTitleChange = (e) => {
     setTaskTitle(e.target.value);
   };
@@ -46,6 +49,7 @@ const  loggedin = useSelector(state=> state.user.login)
       setTimeout(() => {
         setIsdisplay(false);
       }, 2000);
+   
     }
 
     if (taskText.trim() !== "" || taskTitle.trim() !== "") {
@@ -62,11 +66,16 @@ const  loggedin = useSelector(state=> state.user.login)
       dispatch(addTask(newTask));
       setTaskText("");
       setTaskTitle("");
+      taskadd()
+      taskRemainder()
     }
   };
 
-  const handleDeleteTask = (taskId, emailid) => {
-    dispatch(deleteTask({ taskId, emailid }));
+  const handleDeleteTask = (id, emailid) => {
+    dispatch(deleteTask({ id, emailid }));
+    taskdelete()
+    taskRemainder()
+
   };
 
   const handleEditTask = (taskId, emailid, completed) => {
@@ -85,6 +94,8 @@ const  loggedin = useSelector(state=> state.user.login)
     if (editmode === false) setEditmode(true);
 
     dispatch(updateTask(Task));
+    taskref.current.focus();  
+
   };
   const handleEditBtn = () => {
     const Task = {
@@ -100,19 +111,37 @@ const  loggedin = useSelector(state=> state.user.login)
     if (editmode === false) setEditmode(true);
 
     dispatch(updateTask(Task));
+    taskupdated()
+    taskRemainder()
+
   };
+  const handleCancelBtn = () =>{
+
+    if (editmode === true) setEditmode(false);
+    if (editmode === false) setEditmode(true);
+  
+   }
 
   useEffect(() => {
     dispatch(getTask({ emailid: emailid }));
   }, []);
 
+  const taskadd = () => toast("Task Added successfully");
+  const taskdelete = () => toast("Task Removed successfully");
+  const taskcompleted = () => toast("Task marked as Completed");
+  const taskpending = () => toast("Task marked as pending");
+  const taskupdated = () => toast("Task updated successfully");
+  const taskRemainder = () => toast("Task Remainder mail send to " + emailid);
+
+
+
   return (
     <div className="Tasks container-fluid">
       <div className="mt-5  addnotebox container-fluid TasksPage  ">
-        <div className="task-container">
+        <div className="task-container "  id="task">
           {editmode ? <h1>Edit a Task</h1> : <h1>Add a Task</h1>}
           <div className="input-container d-flex flex-column">
-            <input
+            <input  ref={taskref}
               className="taskinp"
               type="text"
               placeholder="Task Title"
@@ -141,7 +170,7 @@ const  loggedin = useSelector(state=> state.user.login)
               onChange={handleTaskTime}
             />
             {editmode ? (
-              <button
+             <> <button
                 className="taskbtn mt-3"
                 onClick={() => {
                   handleEditBtn(taskId, taskCompleted);
@@ -149,6 +178,14 @@ const  loggedin = useSelector(state=> state.user.login)
               >
                 Edit
               </button>
+              <button
+                className="taskbtn mt-3"
+                onClick={() => {
+                  handleCancelBtn();
+                }}
+              >
+                cancel
+              </button></>
             ) : (
               <button className="taskbtn mt-3" onClick={handleAddTask}>
                 Add
@@ -180,7 +217,7 @@ const  loggedin = useSelector(state=> state.user.login)
                   task.completed == 0 ? "" : "checked"
                 }`}
                 onClick={
-                  task.completed == 0
+                  task.completed == 0 
                     ? () =>
                         dispatch(
                           updateTask({
@@ -198,7 +235,10 @@ const  loggedin = useSelector(state=> state.user.login)
                           })
                         )
                 }
-              ></div>
+              >
+{console.log(task.id)}
+
+              </div>
               <div
                 style={{
                   "text-decoration": task.completed == 1 ? "line-through" : "",
@@ -221,14 +261,14 @@ const  loggedin = useSelector(state=> state.user.login)
               </div>
 
               <div className="edit-delete-deadline d-flex flex-column justify-content-center  gap-2">
-                <div
+                <Link to="#task"
                   className="delete-button  "
                   onClick={() =>
                     handleEditTask(task.id, task.emailid, task.completed)
                   }
                 >
                   <FontAwesomeIcon icon={faEdit} />
-                </div>
+                </Link>
 
                 <div
                   className="delete-button  "
@@ -242,6 +282,9 @@ const  loggedin = useSelector(state=> state.user.login)
         ) : (
           <div className="no-tasks-message ">No tasks added</div>
         )}
+      </div>
+      <div>
+        <ToastContainer />
       </div>
     </div>
   );
