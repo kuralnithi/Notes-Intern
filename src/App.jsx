@@ -419,7 +419,7 @@ console.log("US",username);
               </h3>
 
              <Button
-             className=""
+             className="mx-2"
              variant="primary"
              onClick={handleLogout}
            >
@@ -430,14 +430,14 @@ console.log("US",username);
             ) : (
               <div className="logregbtn">
                 <Button
-                  className=" my-2"
+                  className=" my-2 mx-2"
                   variant="primary"
                   onClick={handleShowLogin}
                 >
                   Login
                 </Button>
                 <Button
-                  className=" "
+                  className="mx-2"
                   variant="secondary"
                   onClick={handleShowSignup}
                 >
